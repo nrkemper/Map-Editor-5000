@@ -15,7 +15,7 @@ void MAP_InitMapWindow (void)
 	mapwindow.width = frame.middle.x0 - 1;
 	mapwindow.height = frame.lefthor.y0 - 1;
 
-	blank = LoadSpriteFile (".\\resources\\blanktile.spt");
+	blank = LoadSpriteFile ("..\\..\\resources\\blanktile.spt");
 
 	if (blank==NULL)
 		MessageBox (NULL, "Unable to load blank sprite", "ERROR", MB_OK);
