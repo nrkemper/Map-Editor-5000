@@ -85,15 +85,41 @@ void DrawSprite (int x, int y, int x_clip, int y_clip, sprite_t* sprite)
 	if (y > y_clip)
 		return;
 
-	if (x + sprite->width > x_clip)
-		width = x_clip - x;
+	if (x < 0)
+	{
+		if (x + sprite->width > 0)
+		{
+			width = x + sprite->width;
+			x = 0;
+		}
+		else
+			return;
+	}
 	else
-		width = sprite->width;
+	{		
+		if (x + sprite->width > x_clip)
+			width = x_clip - x;
+		else
+			width = sprite->width;
+	}
 
-	if (y + sprite->height > y_clip)
-		height = y_clip - y;
+	if (y < 0)
+	{
+		if (y + sprite->height > 0)
+		{
+			height = y + sprite->height;
+			y = 0;
+		}
+		else
+			return;
+	}
 	else
-		height = sprite->height;
+	{
+		if (y + sprite->height > y_clip)
+			height = y_clip - y;
+		else
+			height = sprite->height;
+	}
 
 	for (i=0 ; i<height ; i++)
 	{

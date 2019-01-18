@@ -1,5 +1,6 @@
 #include "frame.h"
 #include "mapwindow.h"
+#include "tilewindow.h"
 #include "vid.h"
 
 frame_t		frame;
@@ -66,8 +67,12 @@ void F_MoveMiddleBorder (int x)
 	if (x > vid.width - 2)
 		x = vid.width - 2;
 
+	//FIXME: border width
 	frame.middle.x0 = frame.middle.x1 = x;
 	mapwindow.width = x - 1;
+
+	tilewindow.x = x + 1;
+	tilewindow.width = vid.width - tilewindow.x;
 }
 
 void F_MoveLeftHorizontalBorder (int y)
@@ -91,6 +96,10 @@ void F_MoveRightHorizontalBorder (int y)
 		y = vid.height - 2;
 
 	frame.righthor.y0 = frame.righthor.y1 = y;
+
+	//FIXME: border
+	tilewindow.y = y + 1;  //y + BORDER_SIZE
+	tilewindow.height = vid.height - tilewindow.y;
 }
 
 int F_IsHovering (int mouse_x, int mouse_y)

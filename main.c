@@ -9,6 +9,7 @@
 #include "mapwindow.h"
 #include "resource.h"
 #include "tilewindow.h"
+#include "map.h"
 
 HINSTANCE	global_hInstance;
 HINSTANCE	global_hPrevInstance;
@@ -19,7 +20,8 @@ void DrawWindow ()
 {
 	memset (vid.buffer, 0xff, vid.width * vid.height * sizeof (pixel));
 	F_DrawFrame ();
-	MAP_DrawMapWindow ();
+	MAPWIN_DrawMapWindow ();
+	TW_DrawTileWindow ();
 	VID_UpdateScreen ();
 }
 
@@ -52,7 +54,7 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 						if (GetOpenFileName (&file))
 						{
-							TW_LoadTile (filename);
+							MAP_AddTile (filename);
 						}
 						else
 						{
@@ -61,6 +63,7 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 							sprintf (buffer, "Failed to open file %s", file.lpstrFile);
 							MessageBox (NULL, buffer, "ERROR", MB_OK | MB_ICONEXCLAMATION);
 						}
+						DrawWindow ();
 					}
 					break;
 
@@ -156,6 +159,31 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			draglefthorizontal = dragmiddle = dragrighthorizontal = 0;
 			break;
 
+		case WM_KEYDOWN:
+			switch (wParam)
+			{
+				case VK_LEFT:
+					mapwindow.offset_x--;
+					DrawWindow();
+					break;
+
+				case VK_RIGHT:
+					mapwindow.offset_x++;
+					DrawWindow();
+					break;
+
+				case VK_UP:
+					mapwindow.offset_y--;
+					DrawWindow();
+					break;
+
+				case VK_DOWN:
+					mapwindow.offset_y++;
+					DrawWindow();
+					break;
+			}
+			break;
+
 		case WM_SETCURSOR:	
 			M_SetCursor ();
 			break;
@@ -185,8 +213,9 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			{
 				VID_Shutdown ();
 				M_Shutdown ();
-				MAP_Shutdown ();
+				MAPWIN_Shutdown ();
 				TW_Shutdown ();
+				MAP_Shutdown ();
 			}
 			break;
 
@@ -210,9 +239,10 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	global_nCmdShow			= nCmdShow;
 
 	VID_InitVGA ();
+	MAP_InitMap ();
 	M_InitMouse ();
 	F_InitFrame ();
-	MAP_InitMapWindow ();
+	MAPWIN_InitMapWindow ();
 	TW_InitTileWindow ();
 
 	DrawWindow ();

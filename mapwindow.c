@@ -1,63 +1,77 @@
 #include <Windows.h>
+#include <stdio.h>
+#include <math.h>
 #include "mapwindow.h"
 #include "vid.h"
 #include "frame.h"
 #include "sprite.h"
+#include "map.h"
 
 mapwindow_t		mapwindow;
-//FIXME: for testing only
-sprite_t*		blank;
 
-void MAP_InitMapWindow (void)
+void MAPWIN_InitMapWindow (void)
 {
-	mapwindow.x = 0;
-	mapwindow.y = 0;
-	mapwindow.width = frame.middle.x0 - 1;
-	mapwindow.height = frame.lefthor.y0 - 1;
-
-	blank = LoadSpriteFile ("..\\..\\resources\\blanktile.spt");
-
-	if (blank==NULL)
-		MessageBox (NULL, "Unable to load blank sprite", "ERROR", MB_OK);
+	mapwindow.x				= 0;
+	mapwindow.y				= 0;
+	mapwindow.width			= frame.middle.x0 - 1;
+	mapwindow.height		= frame.lefthor.y0 - 1;
+	mapwindow.offset_x		= 0;
+	mapwindow.offset_y		= 0;
+	mapwindow.borderwidthX	= DEFAULT_BORDER_WIDTH_X;
+	mapwindow.borderwidthY	= DEFAULT_BORDER_WIDTH_Y;
 }
 
-void MAP_DrawMapWindow (void)
+void MAPWIN_DrawMapWindow (void)
 {
-	int		x, y;
+	int		vidX, vidY, vidStartX, vidStartY;
+	int		mapX, mapY, mapStartX, mapStartY;
+	int		tileindex;
 
+	//FIXME: for testing
+	char	buffer[256];
 
-	//FIXME: only dealing with 16 width tiles
-	for (x=16 ; x<mapwindow.width ; x+=16)
+	if (mapwindow.offset_x >= 0)
 	{
-		for (y=0 ; y<mapwindow.height ; y++)
-		{
-			*(vid.buffer + (y * vid.width) + x) = RGBTOPIXEL (0, 0, 0, 0);
-		}
-		x++;
+		mapStartX = floor ((double)mapwindow.offset_x / (double)map.tilewidth);
+		vidStartX = 0 - (mapwindow.offset_x % map.tilewidth);
+	}
+	else
+	{
+		mapStartX = 0;
+		vidStartX = 0 - mapwindow.offset_x;
 	}
 
-	//FIXME: only dealing with 16 width tiles
-	for (y=16 ; y<mapwindow.height ; y+=16)
+	if (mapwindow.offset_y >= 0)
 	{
-		for (x=0 ; x<mapwindow.width ; x++)
-		{
-			*(vid.buffer + (y * vid.width) + x) = RGBTOPIXEL (0, 0, 0, 0);
-		}
-		y++;
+		mapStartY = floor ((double)mapwindow.offset_y / (double)map.tileheight);
+		vidStartY = 0 - (mapwindow.offset_y % map.tileheight);
+	}
+	else
+	{
+		mapStartY = 0;
+		vidStartY = 0 - mapwindow.offset_y;
 	}
 
-	for (y=0 ; y<frame.lefthor.y0; y+=blank->height)
+
+	//sprintf (buffer, "Map Start X: %d\nMap Start Y: %d\nVid Start X: %d\nVid Start Y: %d\n", mapStartX, mapStartY, vidStartX, vidStartY);
+	//MessageBox (NULL, buffer, "Drawing Map", MB_OK);
+
+	for (vidY=vidStartY, mapY=mapStartY; vidY<mapwindow.height && mapY<map.height; vidY+=map.tileheight+mapwindow.borderwidthY, mapY++)
 	{
-		for (x=0 ; x<frame.middle.x0; x+= blank->width)
+		for (vidX=vidStartX, mapX=mapStartX; vidX<mapwindow.width && mapX<map.width; vidX+=map.tilewidth+mapwindow.borderwidthX, mapX++)
 		{
-			DrawSprite (x, y, mapwindow.width, mapwindow.height, blank);
-			x++;
+			tileindex = map.tileindexes[(mapY * map.width) + mapX];
+			DrawSprite (vidX, vidY, mapwindow.width, mapwindow.height, map.tiles[tileindex]);
 		}
-		y++;
 	}
 }
 
-void MAP_Shutdown (void)
+void MAPWIN_HighlightTile (int vidx, int vidy)
 {
-	FreeSprite (blank);
+
+}
+
+void MAPWIN_Shutdown (void)
+{
+
 }

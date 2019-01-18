@@ -8,8 +8,6 @@
 #define DEFAULT_TOPPADDING		5
 #define DEFAULT_BOTTOMPADDING	5
 
-#define MAX_TILE_INCREASE		10
-
 #include "sprite.h"
 
 typedef struct tilewindow_s
@@ -24,9 +22,6 @@ typedef struct tilewindow_s
 	int			rightpadding;
 	int			rowPadding;
 	int			colPadding;
-	int			nTiles;
-	int			nMaxTiles;
-	sprite_t**	tiles;
 } tilewindow_t;
 
 extern tilewindow_t		tilewindow;

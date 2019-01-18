@@ -1,30 +1,26 @@
 #ifndef __MAPWINDOW_H__
 #define __MAPWINDOW_H__
 
-typedef struct map_s
-{
-	unsigned int	width;//in tiles
-	unsigned int	height;
-	unsigned int	nTiles;
-	unsigned int*	tileindexes;
-	//sprite_t*	tiles;
-} map_t;
+#define DEFAULT_BORDER_WIDTH_X	1
+#define DEFAULT_BORDER_WIDTH_Y	1
 
 typedef struct mapwindow_s
 {
-	unsigned int		x;
-	unsigned int		y;
-	unsigned int		width;
-	unsigned int		height;
-	unsigned short int	tilewidth;
-	unsigned short int	tileheight;
-	map_t				map;
+	int				x;
+	int				y;
+	int				width;
+	int				height;
+	int				offset_x;
+	int				offset_y;
+	char			borderwidthX;
+	char			borderwidthY;
 } mapwindow_t;
 
 extern mapwindow_t		mapwindow;
 
-void MAP_InitMapWindow (void);
-void MAP_DrawMapWindow (void);
-void MAP_Shutdown (void);
+void MAPWIN_InitMapWindow (void);
+void MAPWIN_DrawMapWindow (void);
+void MAPWIN_HighlightTile (int x, int y);
+void MAPWIN_Shutdown (void);
 
 #endif
