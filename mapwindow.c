@@ -9,7 +9,7 @@
 
 mapwindow_t		mapwindow;
 
-void MAPWIN_InitMapWindow (void)
+void MAPW_InitMapWindow (void)
 {
 	mapwindow.x				= 0;
 	mapwindow.y				= 0;
@@ -21,14 +21,11 @@ void MAPWIN_InitMapWindow (void)
 	mapwindow.borderwidthY	= DEFAULT_BORDER_WIDTH_Y;
 }
 
-void MAPWIN_DrawMapWindow (void)
+void MAPW_DrawMapWindow (void)
 {
 	int		vidX, vidY, vidStartX, vidStartY;
 	int		mapX, mapY, mapStartX, mapStartY;
 	int		tileindex;
-
-	//FIXME: for testing
-	char	buffer[256];
 
 	if (mapwindow.offset_x >= 0)
 	{
@@ -52,10 +49,6 @@ void MAPWIN_DrawMapWindow (void)
 		vidStartY = 0 - mapwindow.offset_y;
 	}
 
-
-	//sprintf (buffer, "Map Start X: %d\nMap Start Y: %d\nVid Start X: %d\nVid Start Y: %d\n", mapStartX, mapStartY, vidStartX, vidStartY);
-	//MessageBox (NULL, buffer, "Drawing Map", MB_OK);
-
 	for (vidY=vidStartY, mapY=mapStartY; vidY<mapwindow.height && mapY<map.height; vidY+=map.tileheight+mapwindow.borderwidthY, mapY++)
 	{
 		for (vidX=vidStartX, mapX=mapStartX; vidX<mapwindow.width && mapX<map.width; vidX+=map.tilewidth+mapwindow.borderwidthX, mapX++)
@@ -66,12 +59,54 @@ void MAPWIN_DrawMapWindow (void)
 	}
 }
 
-void MAPWIN_HighlightTile (int vidx, int vidy)
+void MAPW_HighlightTile (int x, int y)
 {
+	int		i, j;
+	int		highlightX, highlightY, shiftX, shiftY;
+	char buffer[256];
+
+	//if (mapwindow.offset_x < 0)
+	//	shiftX = (mapwindow.offset_x * -1) % map.tilewidth;
+	//else
+	//	shiftX = mapwindow.offset_x % map.tilewidth;
+
+	//if (mapwindow.offset_y < 0)
+	//	shiftY = (mapwindow.offset_y * -1) % map.tileheight;
+	//else
+	//	shiftY = mapwindow.offset_y % map.tileheight;
+
+	//highlightX = x - (x % (map.tilewidth + mapwindow.borderwidthX + shiftX));
+	//highlightY = y - (y % (map.tileheight + mapwindow.borderwidthY + shiftY));
+
+	if (mapwindow.offset_x < 0)
+		shiftX = mapwindow.offset_x * -1;
+	else
+		shiftX = mapwindow.offset_x % map.tilewidth;
+
+	if (mapwindow.offset_y < 0)
+		shiftY = mapwindow.offset_y * -1;
+	else
+		shiftY = mapwindow.offset_y % map.tileheight;
+
+	highlightX = ((x - shiftX) / (map.tilewidth + mapwindow.borderwidthX) * (map.tilewidth + mapwindow.borderwidthX)) + shiftX;
+	highlightY = ((y - shiftY) / (map.tileheight + mapwindow.borderwidthY) * (map.tileheight + mapwindow.borderwidthY)) + shiftY;
+
+	MAPW_DrawMapWindow ();
+
+	for (i=highlightY; i<highlightY+map.tileheight; i++)
+	{
+		for (j=highlightX; j<highlightX+map.tilewidth; j++)
+			*(vid.buffer + (i * vid.width) + j) |= RGBTOPIXEL (0xff, 0, 0, 0);
+	}
 
 }
 
-void MAPWIN_Shutdown (void)
+int	MAPW_GetTileNum (int x, int y)
+{
+	return 0;
+}
+
+void MAPW_Shutdown (void)
 {
 
 }

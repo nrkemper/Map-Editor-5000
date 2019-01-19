@@ -20,7 +20,7 @@ void DrawWindow ()
 {
 	memset (vid.buffer, 0xff, vid.width * vid.height * sizeof (pixel));
 	F_DrawFrame ();
-	MAPWIN_DrawMapWindow ();
+	//MAPW_DrawMapWindow ();
 	TW_DrawTileWindow ();
 	VID_UpdateScreen ();
 }
@@ -84,6 +84,12 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 				x = GET_X_LPARAM(lParam);
 				y = GET_Y_LPARAM(lParam);
+
+				if (x < mapwindow.width && y < mapwindow.height)
+				{
+					MAPW_HighlightTile (x, y);
+					VID_UpdateScreen ();
+				}
 
 				if (draglefthorizontal)
 				{
@@ -213,7 +219,7 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			{
 				VID_Shutdown ();
 				M_Shutdown ();
-				MAPWIN_Shutdown ();
+				MAPW_Shutdown ();
 				TW_Shutdown ();
 				MAP_Shutdown ();
 			}
@@ -242,7 +248,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
 	MAP_InitMap ();
 	M_InitMouse ();
 	F_InitFrame ();
-	MAPWIN_InitMapWindow ();
+	MAPW_InitMapWindow ();
 	TW_InitTileWindow ();
 
 	DrawWindow ();

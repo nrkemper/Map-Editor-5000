@@ -18,9 +18,10 @@ typedef struct mapwindow_s
 
 extern mapwindow_t		mapwindow;
 
-void MAPWIN_InitMapWindow (void);
-void MAPWIN_DrawMapWindow (void);
-void MAPWIN_HighlightTile (int x, int y);
-void MAPWIN_Shutdown (void);
+void MAPW_InitMapWindow (void);
+void MAPW_DrawMapWindow (void);
+void MAPW_HighlightTile (int x, int y);
+int	MAPW_GetTileNum (int x, int y);
+void MAPW_Shutdown (void);
 
 #endif
