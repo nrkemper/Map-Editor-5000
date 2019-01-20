@@ -3,7 +3,7 @@
 
 #include "sprite.h"
 
-#define DEFAULT_MAP_WIDTH		100  //tiles
+#define DEFAULT_MAP_WIDTH		10  //tiles
 #define DEFAULT_MAP_HEIGHT		20	
 #define DEFAULT_TILEWIDTH		16
 #define DEFAULT_TILEHEIGHT		16

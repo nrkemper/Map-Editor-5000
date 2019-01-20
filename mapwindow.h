@@ -21,7 +21,7 @@ extern mapwindow_t		mapwindow;
 void MAPW_InitMapWindow (void);
 void MAPW_DrawMapWindow (void);
 void MAPW_HighlightTile (int x, int y);
-int	MAPW_GetTileNum (int x, int y);
+int	MAPW_GetTile (int x, int y);
 void MAPW_Shutdown (void);
 
 #endif

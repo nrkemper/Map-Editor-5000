@@ -158,6 +158,9 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 				{
 					draglefthorizontal = dragmiddle = dragrighthorizontal = 0;
 				}
+
+				if (x < mapwindow.width && y < mapwindow.height)
+					MAPW_GetTile (x, y);
 			}
 			break;
 
